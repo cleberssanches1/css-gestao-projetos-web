@@ -1,5 +1,6 @@
 package domain.position.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import domain.position.dto.PositionRequestDTO;
 import domain.position.dto.PositionResponseDTO;
 import utils.CustomPage;
+import utils.exceptions.ServiceException;
 
 public class PositionService {
 
@@ -30,15 +32,24 @@ public class PositionService {
 	 * 
 	 * @param request PositionRequestDTO
 	 * @return PositionResponseDTO
+	 * @throws ServiceException
 	 */
-	public PositionResponseDTO createPosition(PositionRequestDTO request) {
-		String url = URL_BASE + "/gestao-projeto/cargo";
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public PositionResponseDTO createPosition(PositionRequestDTO request) throws ServiceException {
+		PositionResponseDTO response = null;
+		try {
+			String url = URL_BASE + "/gestao-projeto/cargo";
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-		HttpEntity<PositionRequestDTO> entity = new HttpEntity<>(request, headers);
-		return restTemplate.postForObject(url, entity, PositionResponseDTO.class);
+			HttpEntity<PositionRequestDTO> entity = new HttpEntity<>(request, headers);
+			response = restTemplate.postForObject(url, entity, PositionResponseDTO.class);
+
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+
+		return response;
 	}
 
 	/**
@@ -49,19 +60,29 @@ public class PositionService {
 	 * @param size int
 	 * @param sort String
 	 * @return CustomPage<PositionResponseDTO>
+	 * @throws ServiceException
 	 */
-	public CustomPage<PositionResponseDTO> getAllPositions(int page, int size, String sort) {
-		String url = URL_BASE + "/gestao-projeto/cargo/all?page=" + page + "&size=" + size + "&sort=" + sort;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public CustomPage<PositionResponseDTO> getAllPositions(int page, int size, String sort) throws ServiceException {
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
+		CustomPage<PositionResponseDTO> response = null;
 
-		ResponseEntity<CustomPage<PositionResponseDTO>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
-				entity, new ParameterizedTypeReference<CustomPage<PositionResponseDTO>>() {
-				});
+		try {
+			String url = URL_BASE + "/gestao-projeto/cargo/all?page=" + page + "&size=" + size + "&sort=" + sort;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-		return responseEntity.getBody();
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<CustomPage<PositionResponseDTO>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+					entity, new ParameterizedTypeReference<CustomPage<PositionResponseDTO>>() {
+					});
+
+			response = responseEntity.getBody();
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+
+		return response;
 	}
 
 	/**
@@ -69,14 +90,26 @@ public class PositionService {
 	 * 
 	 * @param id String
 	 * @return PositionResponseDTO
+	 * @throws ServiceException
 	 */
-	public PositionResponseDTO getPositionById(String id) {
-		String url = URL_BASE + "/gestao-projeto/cargo/" + id;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public PositionResponseDTO getPositionById(String id) throws ServiceException {
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		return restTemplate.exchange(url, HttpMethod.GET, entity, PositionResponseDTO.class).getBody();
+		PositionResponseDTO response = null;
+
+		try {
+			String url = URL_BASE + "/gestao-projeto/cargo/" + id;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			response = restTemplate.exchange(url, HttpMethod.GET, entity, PositionResponseDTO.class).getBody();
+
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+
+		return response;
 	}
 
 	/**
@@ -86,47 +119,73 @@ public class PositionService {
 	 * @param id      String
 	 * @param request PositionRequestDTO
 	 * @return PositionResponseDTO
+	 * @throws ServiceException
 	 */
-	public PositionResponseDTO updatePosition(String id, PositionRequestDTO request) {
-		String url = URL_BASE + "/gestao-projeto/cargo/" + id;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public PositionResponseDTO updatePosition(String id, PositionRequestDTO request) throws ServiceException {
 
-		HttpEntity<PositionRequestDTO> entity = new HttpEntity<>(request, headers);
-		return restTemplate.exchange(url, HttpMethod.PUT, entity, PositionResponseDTO.class).getBody();
+		PositionResponseDTO response = null;
+
+		try {
+			String url = URL_BASE + "/gestao-projeto/cargo/" + id;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+			HttpEntity<PositionRequestDTO> entity = new HttpEntity<>(request, headers);
+
+			response = restTemplate.exchange(url, HttpMethod.PUT, entity, PositionResponseDTO.class).getBody();
+
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+
+		return response;
 	}
 
 	/**
 	 * Método para fazer a requisição DELETE
 	 * 
 	 * @param id String
+	 * @throws ServiceException
 	 */
-	public void deletePosition(String id) {
-		String url = URL_BASE + "/gestao-projeto/cargo/" + id;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public void deletePosition(String id) throws ServiceException {
+		try {
+			String url = URL_BASE + "/gestao-projeto/cargo/" + id;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+			restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 
 	/**
 	 * Método para fazer a requisição GET por nome do projeto e receber uma lista de
 	 * PositionResponseDTO
 	 * 
-	 * @param cpf String
+	 * @param name String
 	 * @return List<PositionResponseDTO>
+	 * @throws ServiceException
 	 */
-	public List<PositionResponseDTO> getPositionByName(String name) {
-		String url = URL_BASE + "/gestao-projeto/cargo/nome/" + name;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public List<PositionResponseDTO> getPositionByName(String name) throws ServiceException {
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		ResponseEntity<List<PositionResponseDTO>> response = restTemplate.exchange(url, HttpMethod.GET, entity,
-				new ParameterizedTypeReference<List<PositionResponseDTO>>() {
-				});
-		return response.getBody();
+		List<PositionResponseDTO> responseList = new ArrayList<>();
+		try {
+			String url = URL_BASE + "/gestao-projeto/cargo/nome/" + name;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+			ResponseEntity<List<PositionResponseDTO>> response = restTemplate.exchange(url, HttpMethod.GET, entity,
+					new ParameterizedTypeReference<List<PositionResponseDTO>>() {
+					});
+
+			responseList = response.getBody();
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+		return responseList;
 	}
 }

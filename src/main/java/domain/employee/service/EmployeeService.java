@@ -1,5 +1,6 @@
 package domain.employee.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import domain.employee.dto.EmployeeRequestDTO;
 import domain.employee.dto.EmployeeResponseDTO;
 import utils.CustomPage;
+import utils.exceptions.ServiceException;
 
 public class EmployeeService {
 
@@ -30,15 +32,27 @@ public class EmployeeService {
 	 * 
 	 * @param request EmployeeRequestDTO
 	 * @return EmployeeResponseDTO
+	 * @throws ServiceException
 	 */
-	public EmployeeResponseDTO createEmployee(EmployeeRequestDTO request) {
-		String url = URL_BASE + "/gestao-projeto/colaborador";
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public EmployeeResponseDTO createEmployee(EmployeeRequestDTO request) throws ServiceException {
 
-		HttpEntity<EmployeeRequestDTO> entity = new HttpEntity<>(request, headers);
-		return restTemplate.postForObject(url, entity, EmployeeResponseDTO.class);
+		EmployeeResponseDTO response = null;
+
+		try {
+			String url = URL_BASE + "/gestao-projeto/colaborador";
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+			HttpEntity<EmployeeRequestDTO> entity = new HttpEntity<>(request, headers);
+
+			response = restTemplate.postForObject(url, entity, EmployeeResponseDTO.class);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+
+		return response;
+
 	}
 
 	/**
@@ -49,19 +63,28 @@ public class EmployeeService {
 	 * @param size int
 	 * @param sort String
 	 * @return CustomPage<EmployeeResponseDTO>
+	 * @throws ServiceException
 	 */
-	public CustomPage<EmployeeResponseDTO> getAllEmployees(int page, int size, String sort) {
-		String url = URL_BASE + "/gestao-projeto/colaborador/all?page=" + page + "&size=" + size + "&sort=" + sort;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public CustomPage<EmployeeResponseDTO> getAllEmployees(int page, int size, String sort) throws ServiceException {
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
+		CustomPage<EmployeeResponseDTO> response = null;
 
-		ResponseEntity<CustomPage<EmployeeResponseDTO>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
-				entity, new ParameterizedTypeReference<CustomPage<EmployeeResponseDTO>>() {
-				});
+		try {
+			String url = URL_BASE + "/gestao-projeto/colaborador/all?page=" + page + "&size=" + size + "&sort=" + sort;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-		return responseEntity.getBody();
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			ResponseEntity<CustomPage<EmployeeResponseDTO>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+					entity, new ParameterizedTypeReference<CustomPage<EmployeeResponseDTO>>() {
+					});
+
+			response = responseEntity.getBody();
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+		return response;
 	}
 
 	/**
@@ -69,14 +92,23 @@ public class EmployeeService {
 	 * 
 	 * @param id String
 	 * @return EmployeeResponseDTO
+	 * @throws ServiceException
 	 */
-	public EmployeeResponseDTO getEmployeeById(String id) {
-		String url = URL_BASE + "/gestao-projeto/colaborador/" + id;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public EmployeeResponseDTO getEmployeeById(String id) throws ServiceException {
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		return restTemplate.exchange(url, HttpMethod.GET, entity, EmployeeResponseDTO.class).getBody();
+		EmployeeResponseDTO response = null;
+		try {
+			String url = URL_BASE + "/gestao-projeto/colaborador/" + id;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			response = restTemplate.exchange(url, HttpMethod.GET, entity, EmployeeResponseDTO.class).getBody();
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+		return response;
 	}
 
 	/**
@@ -86,29 +118,44 @@ public class EmployeeService {
 	 * @param id      String
 	 * @param request EmployeeRequestDTO
 	 * @return EmployeeResponseDTO
+	 * @throws ServiceException
 	 */
-	public EmployeeResponseDTO updateEmployee(String id, EmployeeRequestDTO request) {
-		String url = URL_BASE + "/gestao-projeto/colaborador/" + id;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public EmployeeResponseDTO updateEmployee(String id, EmployeeRequestDTO request) throws ServiceException {
 
-		HttpEntity<EmployeeRequestDTO> entity = new HttpEntity<>(request, headers);
-		return restTemplate.exchange(url, HttpMethod.PUT, entity, EmployeeResponseDTO.class).getBody();
+		EmployeeResponseDTO response = null;
+
+		try {
+			String url = URL_BASE + "/gestao-projeto/colaborador/" + id;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+			HttpEntity<EmployeeRequestDTO> entity = new HttpEntity<>(request, headers);
+
+			response = restTemplate.exchange(url, HttpMethod.PUT, entity, EmployeeResponseDTO.class).getBody();
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+		return response;
 	}
 
 	/**
 	 * Método para fazer a requisição DELETE
 	 * 
 	 * @param id String
+	 * @throws ServiceException
 	 */
-	public void deleteEmployee(String id) {
-		String url = URL_BASE + "/gestao-projeto/colaborador/" + id;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public void deleteEmployee(String id) throws ServiceException {
+		try {
+			String url = URL_BASE + "/gestao-projeto/colaborador/" + id;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+			restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
 	}
 
 	/**
@@ -117,16 +164,27 @@ public class EmployeeService {
 	 * 
 	 * @param cpf String
 	 * @return List<EmployeeResponseDTO>
+	 * @throws ServiceException
 	 */
-	public List<EmployeeResponseDTO> getEmployeeByName(String cpf) {
-		String url = URL_BASE + "/gestao-projeto/colaborador/cpf/" + cpf;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+	public List<EmployeeResponseDTO> getEmployeeByName(String cpf) throws ServiceException {
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		ResponseEntity<List<EmployeeResponseDTO>> response = restTemplate.exchange(url, HttpMethod.GET, entity,
-				new ParameterizedTypeReference<List<EmployeeResponseDTO>>() {
-				});
-		return response.getBody();
+		List<EmployeeResponseDTO> responseList = new ArrayList<>();
+
+		try {
+
+			String url = URL_BASE + "/gestao-projeto/colaborador/cpf/" + cpf;
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+			ResponseEntity<List<EmployeeResponseDTO>> response = restTemplate.exchange(url, HttpMethod.GET, entity,
+					new ParameterizedTypeReference<List<EmployeeResponseDTO>>() {
+					});
+
+			responseList = response.getBody();
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage());
+		}
+		return responseList;
 	}
 }
