@@ -34,7 +34,7 @@
 			<div class="col-sm-6">
 				<form class="navbar-form" action="<%=request.getContextPath()%>/projeto/filtrar">
 					<div class="form-group">
-						<input type="text" name="busca" placeholder="Digite um nome" class="form-control"/>
+						<input type="text" name="busca" placeholder="Digite um nome de projeto" class="form-control"/>
 					</div>
 					<button type="submit" class="btn btn-success">Filtrar</button>
 				</form>
@@ -58,7 +58,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${itens.getContent()}" var="item">
+				<c:forEach items="${itens}" var="item">
 					<tr>					
  
 						<td>${item.projectCode}</td>
@@ -72,8 +72,10 @@
 						<td>${item.risk}</td>
 						<td>${item.projectStatus.statusDescription}</td>
 					 
-						<td><a href="<%=request.getContextPath()%>/projeto/editar?cod=${item.projectCode}" class="btn btn-primary btn-xs">Editar</a>
-						<a href="<%=request.getContextPath()%>/projeto/remover?cod=${item.projectCode}" class="btn btn-danger btn-xs">Excluir</a></td>
+						<td>
+							<a href="<%=request.getContextPath()%>/projeto/editar?cod=${item.projectCode}" class="btn btn-primary btn-xs">Editar</a>
+							<a href="<%=request.getContextPath()%>/projeto/remover?cod=${item.projectCode}" class="btn btn-danger btn-xs">Excluir</a>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>

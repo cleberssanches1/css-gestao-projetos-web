@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 
 import domain.employee.dto.EmployeeResponseDTO;
 import domain.projectstatus.dto.ProjectStatusResponseDTO;
@@ -40,18 +41,32 @@ public class ProjectResponseDTO implements Serializable {
 	private String risk;
 
 	private ProjectStatusResponseDTO projectStatus;
-	
-	
+	 
 	public Date getConvertProjectStartDate() {
-	    return Date.from(projectStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
+		if(Objects.nonNull(projectStartDate)) {
+			return Date.from(projectStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		}
+		
+	    return null;
 	}
 
 	public Date getConvertForecastEndProject() {
-	    return Date.from(forecastEndProject.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
+		if(Objects.nonNull(forecastEndProject)) {
+			return Date.from(forecastEndProject.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		}
+		
+	    return  null;
 	}
 	
 	public Date getConvertRealEndProject() {
-	    return Date.from(realEndProject.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
+		if(Objects.nonNull(realEndProject)) {
+			return Date.from(realEndProject.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		}
+		
+	    return null;
 	}
 	
 }

@@ -14,11 +14,11 @@
 		<div id="navbar" class="collapse navbar-collapse">
 			<ul class="nav navbar-nav">
 				<li><a href="<%=request.getContextPath()%>/projeto/listar">Cadastro de Projeto</a></li>
-				<li><a href="<%=request.getContextPath()%>/colaborador/listar">Cadastro de Colaboradores</a></li>
-				<li><a href="<%=request.getContextPath()%>/cargo/listar">Cadastro de cargos</a></li>
-				<li><a href="<%=request.getContextPath()%>/Situação/projeto">Inserir Status de Projetos</a></li>
+				<li><a href="<%=request.getContextPath()%>/projeto/listar">Cadastro de Colaboradores</a></li>
+				<li><a href="<%=request.getContextPath()%>/projeto/listar">Cadastro de cargos</a></li>
+				<li><a href="<%=request.getContextPath()%>/projeto/listar">Inserir Status de Projetos</a></li>
 			</ul>
 		</div>
-		<!--/.nav-collapse -->
+		 
 	</div>
 </nav>

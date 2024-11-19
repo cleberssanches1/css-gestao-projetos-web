@@ -45,7 +45,7 @@ public class Instantiation extends HttpServlet {
 			ProjectStatusService projectStatusService = new ProjectStatusService();
 			CustomPage<ProjectStatusResponseDTO> pagina4 = projectStatusService.getAllProjectStatuss(0, 10, "ASC");
 			
-			response.getWriter().append("Objetos retornados :" + pagina4).append(request.getContextPath());
+			response.getWriter().append("Objetos retornados :" + pagina4 + pagina + pagina3 + pagina2).append(request.getContextPath());
 		} catch (Exception e) {
 			response.getWriter().append("Erro encontrado :" + e.getMessage());
 		}
