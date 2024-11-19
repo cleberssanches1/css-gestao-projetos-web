@@ -1,4 +1,4 @@
-package gestao;
+package gestao.web;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
